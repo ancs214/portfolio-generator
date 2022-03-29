@@ -28,4 +28,3 @@ const printProfileData = profileDataArr => {
 
   printProfileData(profileDataArgs);
 
-  //this is test on develop branch through develop branch on mac
