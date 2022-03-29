@@ -28,3 +28,5 @@ console.log(profileDataArgs);
 
 //   printProfileData(profileDataArgs);
 
+const generatePage = () => 'Name: Jane, Github: janehub';
+
