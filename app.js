@@ -29,16 +29,22 @@
 //   printProfileData(profileDataArgs);
 
 
-const profileDataArgs = process.argv.slice(2, process.argv.length);
+//using 'require statement', which is a built-in function that is globally available in node.js
+//it allows app.js to access the 'fs module' functions
+//modules: any reusable piece of code from the core library or even a separate JS file
+
+
+
+const fs = require('fs');
+
+const profileDataArgs = process.argv.slice(2);
 // const name = profileDataArgs[0];
 // const github = profileDataArgs[1];
 //above is same as:
 const [name, github] = profileDataArgs;
 
-
-
-const generatePage = (userName, githubName) => {
-    return `
+const generatePage = (name, github) => {
+  return `
   <!DOCTYPE html> 
   <html lang="en"> 
   <head>
@@ -56,6 +62,10 @@ const generatePage = (userName, githubName) => {
   `;
 };
 
+fs.writeFile('./index.html', generatePage(name, github), err => {
+  if (err) throw new Error(err);
 
-  console.log(name, github);
-  console.log(generatePage(name, github));
+  console.log('Portfolio complete! Check out index.html to see the output!');
+});
+
+  //now when you make a command line argument (i.e. node app jane janehub), the result shows in the html template
