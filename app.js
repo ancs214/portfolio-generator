@@ -36,11 +36,6 @@
 //**************NOTES******************/
 
 
-const inquirer = require('inquirer');
-//console.log(inquirer) to verify inquirer has been successfully imported into script
-// const fs = require('fs');
-// const generatePage = require('./src/page-template.js');
-
 
 //******************NOTES************************/
 //got rid of process.arv stuff since we are now getting our info from inquiry module
@@ -62,6 +57,14 @@ const inquirer = require('inquirer');
 
 //now when you make a command line argument (i.e. node app jane janehub), the result shows in the html template
 
+
+
+
+//console.log(inquirer) to verify inquirer has been successfully imported into script
+const fs = require('fs');
+const inquirer = require('inquirer');
+//assigns generatePage var to the HTML template page
+const generatePage = require('./src/page-template');
 
 const promptUser = () => {
     return inquirer.prompt([
@@ -192,7 +195,47 @@ const promptProject = portfolioData => {
 
 //since these are promises, it is asynchronous and will need to use the .then statement for order of events
 promptUser()
-.then(promptProject)
-.then(portfolioData => {
-  console.log(portfolioData);
-});
+  .then(promptProject)
+  .then(portfolioData => {
+    const pageHTML = generatePage(portfolioData);
+
+    fs.writeFile('./index.html', pageHTML, err => {
+      if (err) throw new Error(err);
+    });
+  });
+
+
+const mockData = {
+    name: 'Ashley-Noel Swarn',
+    github: 'ancs214',
+    confirmAbout: true,
+    about: 'Nurse gone web dev! ',
+    projects: [
+      {
+        name: 'Portfolio Generator',
+        description: 'This web app generates a portfolio page dynamically using Node.js',
+        languages: [Array],
+        link: 'https://github.com/ancs214/portfolio-generator',
+        feature: false,
+        confirmAddProject: true
+      },
+      {
+        name: 'Taskinator',
+        description: 'Task app that uses local storage so users can save tasks in a Kanban style format.',
+        languages: [Array],
+        link: 'https://github.com/ancs214/Taskinator',
+        feature: false,
+        confirmAddProject: true
+      },
+      {
+        name: 'Run Buddy',
+        description: 'Basic webpage design for a trainer website.',
+        languages: [],
+        link: 'https://github.com/ancs214/run-buddy',
+        feature: true,
+        confirmAddProject: false
+      }
+    ]
+  }
+  
+//   const pageHTML = generatePage(mockData);
