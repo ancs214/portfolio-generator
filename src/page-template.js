@@ -23,6 +23,68 @@
 //   module.exports = generatePage;
 
 
+// create the about section
+const generateAbout = aboutText => {
+  if (!aboutText) {
+    return '';
+  }
+
+  return `
+    <section class="my-3" id="about">
+      <h2 class="text-dark bg-primary p-2 display-inline-block">About Me</h2>
+      <p>${aboutText}</p>
+    </section>
+  `;
+};
+
+const generateProjects = projectsArr => {
+  return `
+    <section class="my-3" id="portfolio">
+      <h2 class="text-dark bg-primary p-2 display-inline-block">Work</h2>
+      <div class="flex-row justify-space-between">
+      ${projectsArr
+        //use filter method to create new array based on whether "feature" is marked true
+        .filter(({ feature }) => feature)
+        //use map method to create a new array from the filter array to plug into our html template literals
+        .map(({ name, description, languages, link }) => {
+          return `
+          <div class="col-12 mb-2 bg-dark text-light p-3">
+            <h3 class="portfolio-item-title text-light">${name}</h3>
+            <h5 class="portfolio-languages">
+              Built With:
+              ${languages.join(', ')}
+            </h5>
+            <p>${description}</p>
+            <a href="${link}" class="btn"><i class="fab fa-github mr-2"></i>View Project on GitHub</a>
+          </div>
+        `;
+        })
+        //The join() method creates and returns a new string by concatenating all of the elements in an array (or an array-like object), separated by commas or a specified separator string.
+        .join('')}
+
+      ${projectsArr
+        //use filter method to create new array based on whether "feature" is marked false
+        .filter(({ feature }) => !feature)
+        //use map method to create a new array from the filter array to plug into our html template literals
+        .map(({ name, description, languages, link }) => {
+          return `
+          <div class="col-12 col-md-6 mb-2 bg-dark text-light p-3 flex-column">
+            <h3 class="portfolio-item-title text-light">${name}</h3>
+            <h5 class="portfolio-languages">
+              Built With:
+              ${languages.join(', ')}
+            </h5>
+            <p>${description}</p>
+            <a href="${link}" class="btn mt-auto"><i class="fab fa-github mr-2"></i>View Project on GitHub</a>
+          </div>
+        `;
+        })
+        //The join() method creates and returns a new string by concatenating all of the elements in an array (or an array-like object), separated by commas or a specified separator string.
+        .join('')}
+      </div>
+    </section>
+  `;
+};
 
 //using module.exports node property
 module.exports = templateData => {
@@ -30,6 +92,8 @@ module.exports = templateData => {
     // DESTRUCTURING OBJECT templateData based on their property key names
     //while destructuring an array has to go in order of the array, with the object we just need the exact name of the property/key
     //the ... stands for the rest operator, not to be confused with the spread operator 
+    //You can distinguish between spread and rest by remembering that the spread operator spreads values across a new array or object, while the rest operator condenses leftover array or object values into one new value
+
     const { projects, about, ...header } = templateData;
 
   return `
@@ -58,7 +122,8 @@ module.exports = templateData => {
       </div>
     </header>
     <main class="container my-5">
-
+    ${generateAbout(about)}
+    ${generateProjects(projects)}
     </main>
     <footer class="container text-center py-3">
       <h3 class="text-dark">&copy; ${new Date().getFullYear()} by ${header.name}</h3>
@@ -68,4 +133,66 @@ module.exports = templateData => {
   `;
 };
 
-  //You can distinguish between spread and rest by remembering that the spread operator spreads values across a new array or object, while the rest operator condenses leftover array or object values into one new value
+  
+
+  //***************ORIGINAL GENERATEPROJECTS FUNCTION***********************
+
+  // const generateProjects = projectsArr => {
+    //   // using filter method, get completely new array of just featured projects. will return what passes as true.
+    //   const featuredProjects = projectsArr.filter(project => {
+    //     if (project.feature) {
+    //       return true;
+    //     } else {
+    //       return false;
+    //     }
+    //   });
+    
+    //   // using filter method, get a completely new array of all non-featured projects. will return what passes as true.
+    //   const nonFeaturedProjects = projectsArr.filter(project => {
+    //     if (!project.feature) {
+    //       return true;
+    //     } else {
+    //       return false;
+    //     }
+    //   });
+    
+    //   const featuredProjectHtmlArr = featuredProjects.map(({ name, description, languages, link }) => {
+    //     return `
+    //       <div class="col-12 mb-2 bg-dark text-light p-3 flex-column">
+    //         <h3 class="portfolio-item-title text-light">${name}</h3>
+    //         <h5 class="portfolio-languages">
+    //           Built With:
+    //           ${languages.join(', ')}
+    //         </h5>
+    //         <p>${description}</p>
+    //         <a href="${link}" class="btn mt-auto"><i class="fab fa-github mr-2"></i>View Project on GitHub</a>
+    //       </div>
+    //     `;
+    //   });
+    
+    //   const nonFeaturedProjectHtmlArr = nonFeaturedProjects.map(
+    //     ({ name, description, languages, link }) => {
+    //       return `
+    //         <div class="col-12 col-md-6 mb-2 bg-dark text-light p-3 flex-column">
+    //           <h3 class="portfolio-item-title text-light">${name}</h3>
+    //           <h5 class="portfolio-languages">
+    //             Built With:
+    //             ${languages.join(', ')}
+    //           </h5>
+    //           <p>${description}</p>
+    //           <a href="${link}" class="btn mt-auto"><i class="fab fa-github mr-2"></i>View Project on GitHub</a>
+    //         </div>
+    //       `;
+    //     }
+    //   );
+    
+    //   return `
+    //     <section class="my-3" id="portfolio">
+    //       <h2 class="text-dark bg-primary p-2 display-inline-block">Work</h2>
+    //       <div class="flex-row justify-space-between">
+    //       ${featuredProjectHtmlArr.join('')}
+    //       ${nonFeaturedProjectHtmlArr.join('')}
+    //       </div>
+    //     </section>
+    //   `;
+    // };
