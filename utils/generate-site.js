@@ -46,3 +46,5 @@ const writeFile = fileContent => {
 //     copyFile: copyFile
 //   };
   
+
+//********    NOTE!! can only use module.exports ONCE in a file, or the first will be overridden!!    ********* 
