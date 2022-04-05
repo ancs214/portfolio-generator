@@ -1,67 +1,9 @@
-//**************NOTES******************/
-//make a var to hold process.argv array minus the execPath and JS file path -- isolating command-line arguments only
-// const profileDataArgs = process.argv.slice(2, process.argv.length);
-// console.log(profileDataArgs);
 
-// const printProfileData = profileDataArr => {
-//     for (let i=0; i<profileDataArr.length; i++) {
-//         console.log(profileDataArr[i]);
-//     }
-// };
-
-// printProfileData(profileDataArgs);
-
-// const printProfileData = profileDataArr => {
-//     // This...
-//     for (let i = 0; i < profileDataArr.length; i += 1) {
-//       console.log(profileDataArr[i]);
-//     }
-
-//     console.log('================');
-
-//     // Is the same as this...
-//     // profileDataArr.forEach((profileItem) => {
-//     //   console.log(randomWord)  });
-
-//     //also the same as this...
-//     profileDataArr.forEach((profileItem => console.log(profileItem)));
-//    };
-
-//   printProfileData(profileDataArgs);
-
-
-//using 'require statement', which is a built-in function that is globally available in node.js
-//it allows app.js to access the 'fs module' functions
+//using 'require statement'; built-in function globally available in node. allows us to access other files or modules
 //modules: any reusable piece of code from the core library or even a separate JS file
-//**************NOTES******************/
 
-
-
-//******************NOTES************************/
-//got rid of process.arv stuff since we are now getting our info from inquiry module
-// const profileDataArgs = process.argv.slice(2);
-// // const name = profileDataArgs[0];
-// // const github = profileDataArgs[1];
-// //above is same as:
-// const [name, github] = profileDataArgs;
-//*****************************************/
-
-
-// const pageHTML = generatePage(name, github);
-
-// fs.writeFile('./index.html', pageHTML, err => {
-//   if (err) throw err;
-
-//   console.log('Portfolio complete! Check out index.html to see the output!');
-// });
-
-//now when you make a command line argument (i.e. node app jane janehub), the result shows in the html template
-
-
-
-
-//console.log(inquirer) to verify inquirer has been successfully imported into script
-const fs = require('fs');
+//used object destructuring to grab functions from generate-site file!
+const { writeFile, copyFile } = require('./utils/generate-site.js');
 const inquirer = require('inquirer');
 //assigns generatePage var to the HTML template page
 const generatePage = require('./src/page-template');
@@ -197,8 +139,8 @@ const promptProject = portfolioData => {
 
 const mockData = {
 
-        name: 'Lernantino',
-        github: 'lernantino',
+        name: 'Ashley-Noel Swarn',
+        github: 'ancs214',
         confirmAbout: true,
         about:
           'Duis consectetur nunc nunc. Morbi finibus non sapien nec pharetra. Fusce nec dignissim orci, ac interdum ipsum. Morbi mattis justo sed commodo pellentesque. Nulla eget fringilla nulla. Integer gravida magna mi, id efficitur metus tempus et.',
@@ -208,7 +150,7 @@ const mockData = {
             description:
               'Duis consectetur nunc nunc. Morbi finibus non sapien nec pharetra. Fusce nec dignissim orci, ac interdum ipsum. Morbi mattis justo sed commodo pellentesque. Nulla eget fringilla nulla. Integer gravida magna mi, id efficitur metus tempus et. Nam fringilla elit dapibus pellentesque cursus.',
             languages: ['HTML', 'CSS'],
-            link: 'https://github.com/lernantino/run-buddy',
+            link: 'https://github.com/ancs214/run-buddy',
             feature: true,
             confirmAddProject: true
           },
@@ -217,7 +159,7 @@ const mockData = {
             description:
               'Duis consectetur nunc nunc. Morbi finibus non sapien nec pharetra. Fusce nec dignissim orci, ac interdum ipsum. Morbi mattis justo sed commodo pellentesque. Nulla eget fringilla nulla. Integer gravida magna mi, id efficitur metus tempus et. Nam fringilla elit dapibus pellentesque cursus.',
             languages: ['JavaScript', 'HTML', 'CSS'],
-            link: 'https://github.com/lernantino/taskinator',
+            link: 'https://github.com/ancs214/taskinator',
             feature: true,
             confirmAddProject: true
           },
@@ -226,7 +168,7 @@ const mockData = {
             description:
               'Duis consectetur nunc nunc. Morbi finibus non sapien nec pharetra. Fusce nec dignissim orci, ac interdum ipsum. Morbi mattis justo sed commodo pellentesque. Nulla eget fringilla nulla. Integer gravida magna mi, id efficitur metus tempus et. Nam fringilla elit dapibus pellentesque cursus.',
             languages: ['JavaScript', 'jQuery', 'CSS', 'HTML', 'Bootstrap'],
-            link: 'https://github.com/lernantino/taskmaster-pro',
+            link: 'https://github.com/ancs214/taskmaster-pro',
             feature: false,
             confirmAddProject: true
           },
@@ -235,7 +177,7 @@ const mockData = {
             description:
               'Duis consectetur nunc nunc. Morbi finibus non sapien nec pharetra. Fusce nec dignissim orci, ac interdum ipsum. Morbi mattis justo sed commodo pellentesque.',
             languages: ['JavaScript'],
-            link: 'https://github.com/lernantino/robot-gladiators',
+            link: 'https://github.com/ancs214/robot-gladiators',
             feature: false,
             confirmAddProject: false
           }
@@ -245,13 +187,85 @@ const mockData = {
 
     
   
+
 //since these are promises, it is asynchronous and will need to use the .then statement for order of events
+promptUser()
+  .then(promptProject)
+  .then(portfolioData => {
+    return generatePage(portfolioData);
+  })
+  .then(pageHTML => {
+    return writeFile(pageHTML);
+  })
+  .then(writeFileResponse => {
+    console.log(writeFileResponse);
+    return copyFile();
+  })
+  .then(copyFileResponse => {
+    console.log(copyFileResponse);
+  }) //only needed ONE catch method to handle any error that may occur!
+  .catch(err => {
+    console.log(err);
+  });
+
+
+//*********************ORIGINAL "CALLBACK HELL" OF FUNCTIONS AND PROMISES *******************************/
 // promptUser()
 //   .then(promptProject)
 //   .then(portfolioData => {
-    const pageHTML = generatePage(mockData);
+    // const pageHTML = generatePage(mockData);
 
-    fs.writeFile('./index.html', pageHTML, err => {
-      if (err) throw new Error(err);
-    });
+    // fs.writeFile('./dist/index.html', pageHTML, err => {
+    //     if (err) {
+    //       console.log(err);
+    //       return;
+    //     }
+    //     console.log('Page created! Check out index.html in this directory to see it!');
+      
+    //     fs.copyFile('./src/style.css', './dist/style.css', err => {
+    //       if (err) {
+    //         console.log(err);
+    //         return;
+    //       }
+    //       console.log('Style sheet copied successfully!');
+    //     });
+    //   });
 //   });
+
+
+
+//**************NOTES******************/
+//make a var to hold process.argv array minus the execPath and JS file path -- isolating command-line arguments only
+// const profileDataArgs = process.argv.slice(2, process.argv.length);
+
+// const printProfileData = profileDataArr => {
+//     for (let i=0; i<profileDataArr.length; i++) {
+//         console.log(profileDataArr[i]);
+//     }
+// };
+// printProfileData(profileDataArgs);
+
+
+//************SHORTHAND JS******************
+// THIS...
+//     for (let i = 0; i < profileDataArr.length; i += 1) {
+//       console.log(profileDataArr[i]);
+//     }
+
+// IS THE SAME AS THIS...
+//     // profileDataArr.forEach((profileItem) => {
+//     //   console.log(randomWord)  });
+
+// ALSO THE SAME...
+//     profileDataArr.forEach((profileItem => console.log(profileItem)));
+//    };
+
+
+// const profileDataArgs = process.argv.slice(2);
+//const name = profileDataArgs[0];
+//Const github = profileDataArgs[1];
+//ABOVE IS SAME AS...
+//const [name, github] = profileDataArgs;
+//*****************************************/
+
+
